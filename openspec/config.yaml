@@ -6,7 +6,7 @@ context: |
   技术栈: Godot 4.6, GDScript
   分辨率: 720×1080 竖屏
   玩法: Shanghai 麻将消除（选牌配对、层叠遮挡）
-  阶段进度: P0–P3 已完成，P4 多关卡待做，P5 贴图动画待做
+  阶段进度: P0–P4 已完成，P5 贴图动画待做
   总设计文档: openspec/design.md
 
   架构三层: 数据层(TileType/CellData) → 生成层(LayoutLoader/TileAssigner/BoardBuilder) → 表现层(MahjongTile/BoardController)

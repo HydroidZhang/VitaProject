@@ -1,21 +1,13 @@
-[gd_scene format=3 uid="uid://c8k3board01vita"]
+[gd_scene load_steps=3 format=3 uid="uid://bfs8ohektpomw"]
 
 [ext_resource type="Script" path="res://Scripts/board.gd" id="1_board"]
 [ext_resource type="Script" path="res://Scripts/Game/board_controller.gd" id="2_controller"]
 
 [node name="Board" type="Node2D"]
+visible = false
 script = ExtResource("1_board")
 
 [node name="BoardController" type="Node" parent="."]
 script = ExtResource("2_controller")
-
-[node name="StatusLabel" type="Label" parent="."]
-mouse_filter = 2
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 400.0
-offset_bottom = 60.0
-theme_override_font_sizes/font_size = 24
-text = "加载中..."
 
 [connection signal="board_cleared" from="BoardController" to="." method="_on_board_cleared"]

@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://dys53dilaamb3"]
+
+[ext_resource type="Script" path="res://Scripts/level_button.gd" id="1_level_button"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
+bg_color = Color(0.22, 0.24, 0.28, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hover"]
+bg_color = Color(0.28, 0.32, 0.38, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_disabled"]
+bg_color = Color(0.18, 0.19, 0.22, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="LevelButton" type="PanelContainer"]
+custom_minimum_size = Vector2(600, 76)
+size_flags_horizontal = 3
+mouse_filter = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_normal")
+script = ExtResource("1_level_button")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 14
+
+[node name="HBox" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="IdLabel" type="Label" parent="Margin/HBox"]
+custom_minimum_size = Vector2(88, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "第 1 关"
+vertical_alignment = 1
+
+[node name="NameLabel" type="Label" parent="Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 26
+text = "关卡名"
+vertical_alignment = 1
+
+[node name="StarsLabel" type="Label" parent="Margin/HBox"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.78, 0.2, 1)
+theme_override_font_sizes/font_size = 22
+text = "★★"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LockLabel" type="Label" parent="Margin/HBox"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "🔒"
+horizontal_alignment = 1
+vertical_alignment = 1

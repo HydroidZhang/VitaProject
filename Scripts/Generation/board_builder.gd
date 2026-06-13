@@ -9,6 +9,7 @@ static func build(
 	layout_path: String,
 	tile_ids: Array[String],
 	viewport_size: Vector2 = Vector2(720.0, 1080.0),
+	play_area: Rect2 = Rect2(),
 ) -> Array[MahjongTile]:
 	var cells := LayoutLoader.load(layout_path)
 	if cells.is_empty():
@@ -21,7 +22,8 @@ static func build(
 		)
 		return []
 
-	var origin := _compute_origin(cells, viewport_size)
+	var area := play_area if play_area.size != Vector2.ZERO else Rect2(Vector2.ZERO, viewport_size)
+	var origin := _compute_origin(cells, area.size) + area.position
 	var tiles: Array[MahjongTile] = []
 
 	for index in cells.size():

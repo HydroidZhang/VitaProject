@@ -1,0 +1,162 @@
+[gd_scene format=3 uid="uid://c2n2c70l180cc"]
+
+[ext_resource type="Script" path="res://Scripts/ui/result_overlay.gd" id="1_result"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_green"]
+bg_color = Color(0.28, 0.72, 0.38, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[node name="ResultOverlay" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_result")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="GlowTop" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 80.0
+offset_right = 600.0
+offset_bottom = 280.0
+mouse_filter = 2
+color = Color(0.95, 0.78, 0.22, 0.18)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="LotusPlaceholder" type="ColorRect" parent="Center/Panel"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+color = Color(0.95, 0.78, 0.22, 0.6)
+
+[node name="TitleLabel" type="Label" parent="Center/Panel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.78, 0.22, 1)
+theme_override_font_sizes/font_size = 48
+text = "才华横溢"
+horizontal_alignment = 1
+
+[node name="StatsRow" type="HBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TimeBox" type="PanelContainer" parent="Center/Panel/StatsRow"]
+custom_minimum_size = Vector2(170, 100)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/StatsRow/TimeBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Caption" type="Label" parent="Center/Panel/StatsRow/TimeBox/VBox"]
+layout_mode = 2
+text = "时间"
+horizontal_alignment = 1
+
+[node name="ValueLabel" type="Label" parent="Center/Panel/StatsRow/TimeBox/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "00:00"
+horizontal_alignment = 1
+
+[node name="ScoreBox" type="PanelContainer" parent="Center/Panel/StatsRow"]
+custom_minimum_size = Vector2(170, 100)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/StatsRow/ScoreBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Caption" type="Label" parent="Center/Panel/StatsRow/ScoreBox/VBox"]
+layout_mode = 2
+text = "分数"
+horizontal_alignment = 1
+
+[node name="ValueLabel" type="Label" parent="Center/Panel/StatsRow/ScoreBox/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "0"
+horizontal_alignment = 1
+
+[node name="ComboBox" type="PanelContainer" parent="Center/Panel/StatsRow"]
+custom_minimum_size = Vector2(170, 100)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/StatsRow/ComboBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Caption" type="Label" parent="Center/Panel/StatsRow/ComboBox/VBox"]
+layout_mode = 2
+text = "连击"
+horizontal_alignment = 1
+
+[node name="ValueLabel" type="Label" parent="Center/Panel/StatsRow/ComboBox/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "0"
+horizontal_alignment = 1
+
+[node name="FeedbackLabel" type="Label" parent="Center/Panel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "击败了 95.27% 的玩家！"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ProgressPlaceholder" type="ColorRect" parent="Center/Panel"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.35, 0.35, 0.4, 1)
+
+[node name="ProgressFill" type="ColorRect" parent="Center/Panel/ProgressPlaceholder"]
+layout_mode = 0
+offset_right = 280.0
+offset_bottom = 24.0
+mouse_filter = 2
+color = Color(0.95, 0.78, 0.22, 1)
+
+[node name="NextButton" type="Button" parent="Center/Panel"]
+custom_minimum_size = Vector2(420, 88)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 34
+theme_override_styles/normal = SubResource("StyleBoxFlat_green")
+text = "关卡 2"
+
+[node name="HomeButton" type="Button" parent="Center/Panel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "返回主页"
+flat = true

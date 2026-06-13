@@ -1,10 +1,37 @@
 extends Node2D
 
+signal level_cleared(level_id: int, elapsed_sec: float, score: int, matches: int)
+signal stats_changed(score: int, matches: int)
+
 @onready var _controller: BoardController = $BoardController
-@onready var _status_label: Label = $StatusLabel
 
 var _layout_path: String = ""
 var _tile_pool: Array[String] = []
+var _current_level_id: int = 0
+var _elapsed_sec: float = 0.0
+var _score: int = 0
+var _matches: int = 0
+var _playing: bool = false
+
+
+func _ready() -> void:
+	_controller.pair_removed.connect(_on_pair_removed)
+
+
+func _process(delta: float) -> void:
+	if _playing:
+		_elapsed_sec += delta
+
+
+func start_level_data(level: LevelData, viewport_size: Vector2 = Vector2(720.0, 1080.0)) -> void:
+	_current_level_id = level.id
+	_layout_path = level.layout_path
+	_tile_pool = level.tile_pool.duplicate()
+	_elapsed_sec = 0.0
+	_score = 0
+	_matches = 0
+	_playing = true
+	start_level(level.layout_path, DemoLevel.EMPTY_TILE_IDS, _tile_pool, viewport_size)
 
 
 func start_level(
@@ -23,21 +50,40 @@ func start_level(
 	if resolved_tile_ids.is_empty():
 		var cells := LayoutLoader.load(layout_path)
 		if cells.is_empty():
-			_status_label.text = "布局加载失败"
+			_playing = false
 			return
 		resolved_tile_ids = TileAssigner.assign_solvable(cells, tile_pool)
 
-	var tiles := BoardBuilder.build(self, layout_path, resolved_tile_ids, viewport_size)
+	var play_area := Rect2(
+		0.0,
+		UIConstants.TOP_BAR_H,
+		viewport_size.x,
+		viewport_size.y - UIConstants.TOP_BAR_H - UIConstants.BOTTOM_BAR_H,
+	)
+	var tiles := BoardBuilder.build(
+		self, layout_path, resolved_tile_ids, viewport_size, play_area
+	)
 	if tiles.is_empty():
-		_status_label.text = "布局加载失败"
+		_playing = false
 		return
 
 	_controller.initialize(tiles)
-	_status_label.text = "消除所有牌即可通关，按 R 重新洗牌"
 
 
 func restart_level(viewport_size: Vector2 = Vector2(720.0, 1080.0)) -> void:
-	start_level(_layout_path, DemoLevel.EMPTY_TILE_IDS, _tile_pool, viewport_size)
+	var level := LevelRegistry.get_by_id(_current_level_id)
+	if level != null:
+		start_level_data(level, viewport_size)
+
+
+func request_hint() -> void:
+	_controller.show_hint()
+
+
+func _on_pair_removed() -> void:
+	_matches += 1
+	_score += 100
+	stats_changed.emit(_score, _matches)
 
 
 func _clear_tiles() -> void:
@@ -47,11 +93,5 @@ func _clear_tiles() -> void:
 
 
 func _on_board_cleared() -> void:
-	_status_label.text = "通关！按 R 再来一局"
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		var key_event := event as InputEventKey
-		if key_event.pressed and key_event.keycode == KEY_R:
-			restart_level(get_viewport_rect().size)
+	_playing = false
+	level_cleared.emit(_current_level_id, _elapsed_sec, _score, _matches)

@@ -2,6 +2,7 @@ class_name BoardController
 extends Node
 
 signal board_cleared
+signal pair_removed
 
 var _state := BoardState.new()
 var _selected: MahjongTile = null
@@ -74,6 +75,21 @@ func _on_tile_pressed(tile: MahjongTile) -> void:
 	refresh_match_hints()
 
 
+func show_hint() -> void:
+	var active_tiles := _state.get_active_tiles()
+	var free_tiles: Array[MahjongTile] = []
+	for tile in active_tiles:
+		if FreeTileChecker.is_free(tile, active_tiles):
+			free_tiles.append(tile)
+
+	for first_index in free_tiles.size():
+		for second_index in range(first_index + 1, free_tiles.size()):
+			if _can_match(free_tiles[first_index], free_tiles[second_index]):
+				free_tiles[first_index].set_match_hint(true)
+				free_tiles[second_index].set_match_hint(true)
+				return
+
+
 func _can_match(first: MahjongTile, second: MahjongTile) -> bool:
 	if first.tile_type == null or second.tile_type == null:
 		return false
@@ -85,6 +101,7 @@ func _remove_pair(first: MahjongTile, second: MahjongTile) -> void:
 	_state.unregister(second)
 	first.queue_free()
 	second.queue_free()
+	pair_removed.emit()
 	refresh_free_states()
 
 	if _state.is_empty():

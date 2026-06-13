@@ -1,0 +1,165 @@
+[gd_scene format=3 uid="uid://homescreen01"]
+
+[ext_resource type="Script" path="res://Scripts/ui/home_screen.gd" id="1_home"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_orange"]
+bg_color = Color(0.92, 0.48, 0.18, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[node name="HomeScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_home")
+
+[node name="WoodBg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.55, 0.38, 0.22, 1)
+
+[node name="DoorLeft" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 120.0
+offset_right = 350.0
+offset_bottom = 900.0
+mouse_filter = 2
+color = Color(0.72, 0.52, 0.32, 1)
+
+[node name="DoorRight" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 370.0
+offset_top = 120.0
+offset_right = 680.0
+offset_bottom = 900.0
+mouse_filter = 2
+color = Color(0.68, 0.48, 0.28, 1)
+
+[node name="PaperOverlay" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 160.0
+offset_right = 660.0
+offset_bottom = 860.0
+mouse_filter = 2
+color = Color(0.88, 0.82, 0.7, 0.35)
+
+[node name="BambooStrip1" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 200.0
+offset_right = 108.0
+offset_bottom = 500.0
+mouse_filter = 2
+color = Color(0.42, 0.58, 0.28, 0.5)
+
+[node name="BambooStrip2" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 580.0
+offset_top = 250.0
+offset_right = 588.0
+offset_bottom = 550.0
+mouse_filter = 2
+color = Color(0.42, 0.58, 0.28, 0.5)
+
+[node name="FooterBar" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(0.28, 0.18, 0.1, 1)
+
+[node name="ProfilePlaceholder" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 88.0
+offset_bottom = 88.0
+
+[node name="ProfileColor" type="ColorRect" parent="ProfilePlaceholder"]
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.45, 0.55, 0.65, 1)
+
+[node name="ProfileLabel" type="Label" parent="ProfilePlaceholder"]
+layout_mode = 2
+text = "头像"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SettingsButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 632.0
+offset_top = 24.0
+offset_right = 696.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 28
+text = "⚙"
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="LogoIcon" type="ColorRect" parent="Center/Panel"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+color = Color(0.3, 0.65, 0.35, 1)
+
+[node name="LogoTitle" type="Label" parent="Center/Panel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.78, 0.22, 1)
+theme_override_font_sizes/font_size = 52
+text = "Vita"
+horizontal_alignment = 1
+
+[node name="LogoSubtitle" type="Label" parent="Center/Panel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "MAHJONG"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Center/Panel"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="Center/Panel"]
+custom_minimum_size = Vector2(420, 88)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_orange")
+text = "关卡 1"
+
+[node name="LevelSelectButton" type="Button" parent="Center/Panel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "选关"
+flat = true

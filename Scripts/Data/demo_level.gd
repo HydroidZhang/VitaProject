@@ -1,6 +1,8 @@
 class_name DemoLevel
 extends RefCounted
 
+# 兼容常量，关卡数据已迁移至 Data/Levels/levels.json
+
 const LAYOUT_PATH := "res://Data/Layouts/demo_12.json"
 const EMPTY_TILE_IDS: Array[String] = []
 

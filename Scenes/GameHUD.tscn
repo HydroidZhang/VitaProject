@@ -1,0 +1,129 @@
+[gd_scene format=3 uid="uid://gamehud001"]
+
+[ext_resource type="Script" path="res://Scripts/ui/game_hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top"]
+bg_color = Color(0.28, 0.18, 0.1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom"]
+bg_color = Color(0.28, 0.18, 0.1, 1)
+
+[node name="GameHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_hud")
+
+[node name="TopBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 72.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_top")
+
+[node name="Margin" type="MarginContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="HBox" type="HBoxContainer" parent="TopBar/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BackButton" type="Button" parent="TopBar/Margin/HBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "←"
+
+[node name="LevelLabel" type="Label" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "关卡 1"
+vertical_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="TopBar/Margin/HBox"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "分数 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MatchLabel" type="Label" parent="TopBar/Margin/HBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "匹配 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuButton" type="Button" parent="TopBar/Margin/HBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "☰"
+
+[node name="BottomBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bottom")
+
+[node name="Tools" type="HBoxContainer" parent="BottomBar"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 80
+
+[node name="ShuffleButton" type="Button" parent="BottomBar/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "洗牌"
+
+[node name="ShuffleBadge" type="Label" parent="BottomBar/Tools/ShuffleButton"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = -4.0
+offset_right = 88.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "∞"
+horizontal_alignment = 1
+
+[node name="HintButton" type="Button" parent="BottomBar/Tools"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "提示"
+
+[node name="HintBadge" type="Label" parent="BottomBar/Tools/HintButton"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = -4.0
+offset_right = 88.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "∞"
+horizontal_alignment = 1
