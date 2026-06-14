@@ -8,8 +8,8 @@ var display_name: String = ""
 var category: Category = Category.WAN
 
 
-static func get_category_color(category: Category) -> Color:
-	match category:
+static func get_category_color(tile_category: Category) -> Color:
+	match tile_category:
 		Category.WAN:
 			return Color(0.86, 0.32, 0.32)
 		Category.TIAO:

@@ -1,15 +1,17 @@
 [gd_scene format=3 uid="uid://homescreen01"]
 
-[ext_resource type="Script" path="res://Scripts/ui/home_screen.gd" id="1_home"]
+[ext_resource type="Script" uid="uid://c58glt388y2w7" path="res://Scripts/ui/home_screen.gd" id="1_home"]
+[ext_resource type="Texture2D" uid="uid://cefp3mr2oghj7" path="res://Assets/UI/Home/bg.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://bm7a78dcobkbp" path="res://Assets/UI/Home/leaf_1.png" id="3_leaf1"]
+[ext_resource type="Texture2D" uid="uid://c5dl2owo3wsnc" path="res://Assets/UI/Home/leaf_2.png" id="4_leaf2"]
+[ext_resource type="Texture2D" uid="uid://cc6c0wu7tr6mb" path="res://Assets/UI/Home/leaf_3.png" id="5_leaf3"]
+[ext_resource type="Texture2D" uid="uid://leduhidnyqb8" path="res://Assets/UI/Home/profile.png" id="6_profile"]
+[ext_resource type="Texture2D" uid="uid://drb8uwxvidor1" path="res://Assets/UI/Home/btn_settings.png" id="8_settings"]
+[ext_resource type="Texture2D" uid="uid://c3r0u62mln11c" path="res://Assets/UI/Home/logo_clean.png" id="9_logo"]
+[ext_resource type="Texture2D" uid="uid://xqrh4rsgpp1e" path="res://Assets/UI/Home/door_icon.png" id="10_door"]
+[ext_resource type="Texture2D" uid="uid://bm3itp5hrl425" path="res://Assets/UI/Home/btn_play.png" id="11_play"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_orange"]
-bg_color = Color(0.92, 0.48, 0.18, 1)
-corner_radius_top_left = 36
-corner_radius_top_right = 36
-corner_radius_bottom_right = 36
-corner_radius_bottom_left = 36
-
-[node name="HomeScreen" type="Control"]
+[node name="HomeScreen" type="Control" unique_id=1664481160]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_home")
 
-[node name="WoodBg" type="ColorRect" parent="."]
+[node name="Bg" type="TextureRect" parent="." unique_id=274123389]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,140 +28,157 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.55, 0.38, 0.22, 1)
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="DoorLeft" type="ColorRect" parent="."]
+[node name="Leaf1" type="TextureRect" parent="." unique_id=286713298]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 120.0
-offset_right = 350.0
-offset_bottom = 900.0
-mouse_filter = 2
-color = Color(0.72, 0.52, 0.32, 1)
-
-[node name="DoorRight" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 370.0
-offset_top = 120.0
-offset_right = 680.0
-offset_bottom = 900.0
-mouse_filter = 2
-color = Color(0.68, 0.48, 0.28, 1)
-
-[node name="PaperOverlay" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 60.0
-offset_top = 160.0
-offset_right = 660.0
-offset_bottom = 860.0
-mouse_filter = 2
-color = Color(0.88, 0.82, 0.7, 0.35)
-
-[node name="BambooStrip1" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 100.0
-offset_top = 200.0
-offset_right = 108.0
+offset_left = 48.0
+offset_top = 420.0
+offset_right = 128.0
 offset_bottom = 500.0
 mouse_filter = 2
-color = Color(0.42, 0.58, 0.28, 0.5)
+texture = ExtResource("3_leaf1")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BambooStrip2" type="ColorRect" parent="."]
+[node name="Leaf2" type="TextureRect" parent="." unique_id=1628026345]
 layout_mode = 0
 offset_left = 580.0
-offset_top = 250.0
-offset_right = 588.0
-offset_bottom = 550.0
+offset_top = 360.0
+offset_right = 680.0
+offset_bottom = 460.0
 mouse_filter = 2
-color = Color(0.42, 0.58, 0.28, 0.5)
+texture = ExtResource("4_leaf2")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="FooterBar" type="ColorRect" parent="."]
+[node name="Leaf3" type="TextureRect" parent="." unique_id=1729558079]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 620.0
+offset_right = 600.0
+offset_bottom = 700.0
+mouse_filter = 2
+texture = ExtResource("5_leaf3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ProfileButton" type="TextureButton" parent="." unique_id=326518609]
+unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 12
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 28.0
+offset_right = 134.0
+offset_bottom = 149.0
+texture_normal = ExtResource("6_profile")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SettingsButton" type="TextureButton" parent="." unique_id=1511244200]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -134.0
+offset_top = 28.0
+offset_right = -24.0
+offset_bottom = 149.0
+texture_normal = ExtResource("8_settings")
+stretch_mode = 5
+
+[node name="Logo" type="TextureRect" parent="." unique_id=1706019640]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -240.0
+offset_top = 108.0
+offset_right = 240.0
+offset_bottom = 258.0
+grow_horizontal = 2
+mouse_filter = 2
+texture = ExtResource("9_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DoorIcon" type="TextureRect" parent="." unique_id=41707004]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -80.0
+offset_right = 150.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10_door")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayButton" type="TextureButton" parent="." unique_id=1561764121]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 109)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -241.0
+offset_right = 200.0
+offset_bottom = -132.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("11_play")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="PlayButton"]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -48.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 mouse_filter = 2
-color = Color(0.28, 0.18, 0.1, 1)
-
-[node name="ProfilePlaceholder" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 88.0
-offset_bottom = 88.0
-
-[node name="ProfileColor" type="ColorRect" parent="ProfilePlaceholder"]
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.45, 0.55, 0.65, 1)
-
-[node name="ProfileLabel" type="Label" parent="ProfilePlaceholder"]
-layout_mode = 2
-text = "头像"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.35, 0.18, 0.08, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 30
+text = "关卡 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SettingsButton" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 632.0
-offset_top = 24.0
-offset_right = 696.0
-offset_bottom = 88.0
-theme_override_font_sizes/font_size = 28
-text = "⚙"
-
-[node name="Center" type="CenterContainer" parent="."]
+[node name="LevelSelectButton" type="Button" parent="." unique_id=1911500590]
+custom_minimum_size = Vector2(112, 40)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Panel" type="VBoxContainer" parent="Center"]
-custom_minimum_size = Vector2(520, 0)
-layout_mode = 2
-theme_override_constants/separation = 28
-
-[node name="LogoIcon" type="ColorRect" parent="Center/Panel"]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-color = Color(0.3, 0.65, 0.35, 1)
-
-[node name="LogoTitle" type="Label" parent="Center/Panel"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.78, 0.22, 1)
-theme_override_font_sizes/font_size = 52
-text = "Vita"
-horizontal_alignment = 1
-
-[node name="LogoSubtitle" type="Label" parent="Center/Panel"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 38
-text = "MAHJONG"
-horizontal_alignment = 1
-
-[node name="Spacer" type="Control" parent="Center/Panel"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-
-[node name="PlayButton" type="Button" parent="Center/Panel"]
-custom_minimum_size = Vector2(420, 88)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 36
-theme_override_styles/normal = SubResource("StyleBoxFlat_orange")
-text = "关卡 1"
-
-[node name="LevelSelectButton" type="Button" parent="Center/Panel"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
+offset_left = -56.0
+offset_top = -120.0
+offset_right = 56.0
+offset_bottom = -80.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.98, 0.95, 0.88, 1)
+theme_override_colors/font_hover_color = Color(1, 0.92, 0.55, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.85, 0.45, 1)
+theme_override_colors/font_outline_color = Color(0.22, 0.12, 0.06, 0.85)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
 text = "选关"
 flat = true

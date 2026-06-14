@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://playbg00001"]
 
-[node name="PlayBackground" type="ColorRect"]
+[ext_resource type="Texture2D" uid="uid://dxs5746g532ie" path="res://Assets/UI/Game/bg.png" id="1_bg"]
+
+[node name="PlayBackground" type="TextureRect"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.12, 0.38, 0.22, 1)
+texture = ExtResource("1_bg")
+expand_mode = 1
+stretch_mode = 6

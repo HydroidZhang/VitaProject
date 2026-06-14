@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/mahjong.gd" id="1_mahjong"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tile"]
-size = Vector2(73, 102)
+size = Vector2(80, 112)
 
 [sub_resource type="FontVariation" id="FontVariation_r2gpi"]
 
@@ -11,7 +11,7 @@ size = Vector2(73, 102)
 default_font = SubResource("FontVariation_r2gpi")
 
 [node name="Mahjong" type="Area2D" unique_id=355889153]
-input_pickable = true
+input_pickable = false
 script = ExtResource("1_mahjong")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2109483721]
@@ -45,6 +45,7 @@ offset_bottom = 43.0
 color = Color(0.2, 0.2, 0.2, 1)
 
 [node name="Face" type="ColorRect" parent="." unique_id=1465684227]
+visible = false
 mouse_filter = 2
 z_index = 2
 offset_left = -36.0
@@ -52,6 +53,10 @@ offset_top = -51.0
 offset_right = 29.0
 offset_bottom = 43.0
 color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="FaceSprite" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(-3.5, -4.0)
 
 [node name="FaceHighlight" type="ColorRect" parent="." unique_id=1465684230]
 mouse_filter = 2
@@ -174,3 +179,33 @@ offset_top = -53.0
 offset_right = 31.0
 offset_bottom = 49.0
 color = Color(0.45, 1, 0.6, 1)
+
+[node name="BlockMarks" type="Node2D" parent="."]
+z_index = 6
+
+[node name="LeftMark" type="ColorRect" parent="BlockMarks"]
+visible = false
+mouse_filter = 2
+offset_left = -40.0
+offset_top = -24.0
+offset_right = -34.0
+offset_bottom = 24.0
+color = Color(1, 0.35, 0.35, 0.9)
+
+[node name="RightMark" type="ColorRect" parent="BlockMarks"]
+visible = false
+mouse_filter = 2
+offset_left = 28.0
+offset_top = -24.0
+offset_right = 34.0
+offset_bottom = 24.0
+color = Color(1, 0.35, 0.35, 0.9)
+
+[node name="CoverMark" type="ColorRect" parent="BlockMarks"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -54.0
+offset_right = 24.0
+offset_bottom = -46.0
+color = Color(1, 0.55, 0.2, 0.95)

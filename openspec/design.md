@@ -238,7 +238,7 @@ res://
 | **P3** | 随机洗牌 + DFS 可解性验证 | ✅ 完成 | `tile-assignment` |
 | **P4** | 多关卡 + 关卡选择 UI + 进度 | ✅ 完成 | `level-progression` |
 | **P4+** | Vita 风格三屏 UI 白模 | ✅ 完成 | — |
-| **P5** | 贴图资源 + 动画 + 音效 | 🔲 待做 | — |
+| **P5** | 贴图资源 + 动画 + 音效 | 🚧 进行中 | `tile-visuals` |
 
 ### P4 已实现
 
@@ -251,6 +251,13 @@ res://
 - 替换 ColorRect 为 Sprite2D 贴图
 - 消除/选中动画
 - 背景音乐与音效
+
+### P5 已实现（首轮）
+
+- `TileTextureAtlas` 程序化象牙牌面 + 花色点数图案
+- `MahjongTile` 选中回弹、配对淡出消除动画
+- `SfxManager` Autoload：点击 / 配对 / 通关 / 洗牌短音
+- 后续可替换真实 PNG 图集与 BGM 资源
 
 ---
 

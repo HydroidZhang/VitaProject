@@ -47,6 +47,18 @@ static func load(path: String) -> Array[CellData]:
 				push_error("Cell %d missing '%s' in layout: %s" % [index, field, path])
 				return []
 
-		cells.append(CellData.from_dict(cell_dict))
+		cells.append(_normalize_cell(CellData.from_dict(cell_dict)))
 
 	return cells
+
+
+static func _normalize_cell(cell: CellData) -> CellData:
+	match cell.layer:
+		0:
+			if cell.y >= 4:
+				cell.y = (cell.y - 4) / TileConstants.GRID_ROW_SPACING
+			elif cell.y >= 2:
+				cell.y = (cell.y - 2) / TileConstants.GRID_ROW_SPACING
+		1, 2:
+			cell.y = 0
+	return cell

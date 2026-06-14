@@ -15,10 +15,24 @@ run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameSettings="*res://Scripts/Audio/game_settings.gd"
+SfxManager="*res://Scripts/Audio/sfx_manager.gd"
+ScreenAdapter="*res://Scripts/ui/screen_adapter.gd"
+HotUpdateManager="*res://Scripts/Update/hot_update_manager.gd"
+BgmManager="*res://Scripts/Audio/bgm_manager.gd"
+
 [display]
 
 window/size/viewport_width=720
 window/size/viewport_height=1080
+window/size/resizable=false
+window/size/window_width_override=720
+window/size/window_height_override=1600
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_width"
+window/handheld/orientation=1
 
 [physics]
 
@@ -27,3 +41,5 @@ window/size/viewport_height=1080
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.14, 0.2, 0.11, 1)

@@ -3,33 +3,61 @@ extends Node
 
 signal board_cleared
 signal pair_removed
+signal match_scored(board_pos: Vector2, amount: int)
+signal block_tip_requested(message: String)
 
 var _state := BoardState.new()
 var _selected: MahjongTile = null
+var _last_pointer_ms: int = -1000
+var _last_pointer_pos: Vector2 = Vector2(-99999.0, -99999.0)
 
 
 func reset() -> void:
 	_state = BoardState.new()
 	_selected = null
+	_last_pointer_ms = -1000
+	_last_pointer_pos = Vector2(-99999.0, -99999.0)
 
 
 func initialize(tiles: Array[MahjongTile]) -> void:
 	reset()
 	for tile in tiles:
 		_state.register(tile)
-		tile.pressed.connect(_on_tile_pressed.bind(tile))
 
 	refresh_free_states()
+
+
+func handle_pointer_at(canvas_pos: Vector2) -> void:
+	var now_ms := Time.get_ticks_msec()
+	if (
+		now_ms - _last_pointer_ms < 100
+		and canvas_pos.distance_to(_last_pointer_pos) < 16.0
+	):
+		return
+	_last_pointer_ms = now_ms
+	_last_pointer_pos = canvas_pos
+
+	var tile := TilePicker.pick_tile_at(_state.get_active_tiles(), canvas_pos)
+	if tile == null:
+		return
+
+	SfxManager.play_click()
+	if not tile.is_free:
+		block_tip_requested.emit(tile.get_block_message())
+		return
+
+	_handle_tile_pressed(tile)
 
 
 func refresh_free_states() -> void:
 	var active_tiles := _state.get_active_tiles()
 	for tile in active_tiles:
-		var free := FreeTileChecker.is_free(tile, active_tiles)
+		var block_info := FreeTileChecker.get_block_info(tile, active_tiles)
+		var free: bool = FreeTileChecker.is_free(tile, active_tiles)
 		if not free and tile == _selected:
 			tile.set_selected(false)
 			_selected = null
-		tile.set_free(free)
+		tile.set_free(free, block_info)
 
 	refresh_match_hints()
 
@@ -37,16 +65,16 @@ func refresh_free_states() -> void:
 func refresh_match_hints() -> void:
 	var active_tiles := _state.get_active_tiles()
 	for tile in active_tiles:
-		var show_hint := (
+		var should_show_hint := (
 			_selected != null
 			and tile != _selected
 			and tile.is_free
 			and _can_match(_selected, tile)
 		)
-		tile.set_match_hint(show_hint)
+		tile.set_match_hint(should_show_hint)
 
 
-func _on_tile_pressed(tile: MahjongTile) -> void:
+func _handle_tile_pressed(tile: MahjongTile) -> void:
 	if not tile.is_free:
 		return
 
@@ -99,10 +127,30 @@ func _can_match(first: MahjongTile, second: MahjongTile) -> bool:
 func _remove_pair(first: MahjongTile, second: MahjongTile) -> void:
 	_state.unregister(first)
 	_state.unregister(second)
-	first.queue_free()
-	second.queue_free()
-	pair_removed.emit()
+	_selected = null
 	refresh_free_states()
 
-	if _state.is_empty():
+	var board := get_parent() as Node2D
+	if board == null:
+		first.queue_free()
+		second.queue_free()
+		_finish_pair_removed()
+		return
+
+	var board_now_empty := _state.is_empty()
+	var on_collision := func(collision_pos: Vector2) -> void:
+		match_scored.emit(collision_pos, GameplayConstants.MATCH_SCORE)
+	var on_finished := func() -> void:
+		first.queue_free()
+		second.queue_free()
+		_finish_pair_removed(board_now_empty)
+
+	MatchElimination.play(board, first, second, on_collision, on_finished)
+
+
+func _finish_pair_removed(board_now_empty: bool = false) -> void:
+	pair_removed.emit()
+	refresh_free_states()
+	if board_now_empty:
+		SfxManager.play_clear()
 		board_cleared.emit()

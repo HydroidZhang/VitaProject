@@ -1,4 +1,4 @@
-extends PanelContainer
+extends Control
 
 signal pressed
 
@@ -10,25 +10,26 @@ signal pressed
 var _unlocked: bool = true
 
 
+func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
 func setup(level_id: int, level_name: String, difficulty: int, unlocked: bool) -> void:
 	_unlocked = unlocked
 	_id_label.text = "第 %d 关" % level_id
 	_name_label.text = level_name
 	_stars_label.text = "★".repeat(difficulty)
 	_lock_label.text = "" if unlocked else "🔒"
-	modulate = Color(1, 1, 1, 1) if unlocked else Color(0.55, 0.55, 0.58, 1)
+	modulate = Color(1, 1, 1, 1) if unlocked else Color(0.6, 0.6, 0.62, 1)
 
 
-func _gui_input(event: InputEvent) -> void:
+func trigger_tap() -> void:
 	if not _unlocked:
 		return
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
-			pressed.emit()
-			accept_event()
-	if event is InputEventScreenTouch:
-		var touch_event := event as InputEventScreenTouch
-		if touch_event.pressed:
-			pressed.emit()
-			accept_event()
+	ButtonPressScale.press_down(self)
+	var tween := create_tween()
+	tween.tween_interval(0.07)
+	tween.tween_callback(func() -> void:
+		ButtonPressScale.press_up(self)
+		pressed.emit()
+	)

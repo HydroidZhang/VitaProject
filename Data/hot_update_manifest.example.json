@@ -1,0 +1,14 @@
+{
+  "min_app_version": 1,
+  "packs": [
+    {
+      "id": "content",
+      "channel": "android",
+      "version": 1,
+      "url": "https://cdn.example.com/vita/content_v1.pck",
+      "size": 0,
+      "sha256": "",
+      "replace": true
+    }
+  ]
+}

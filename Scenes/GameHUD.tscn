@@ -1,14 +1,24 @@
 [gd_scene format=3 uid="uid://gamehud001"]
 
-[ext_resource type="Script" path="res://Scripts/ui/game_hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://btmj3gr8235oo" path="res://Scripts/ui/game_hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" uid="uid://dcqu8t3uqwgua" path="res://Assets/UI/Game/btn_back.png" id="2_back"]
+[ext_resource type="Texture2D" uid="uid://bnw816srnsh5i" path="res://Assets/UI/Game/btn_menu.png" id="3_menu"]
+[ext_resource type="Texture2D" uid="uid://djx2hcpgfnwrn" path="res://Assets/UI/Game/btn_shuffle.png" id="4_shuffle"]
+[ext_resource type="Texture2D" uid="uid://bvkt86id0ehy" path="res://Assets/UI/Game/btn_hint.png" id="5_hint"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top"]
-bg_color = Color(0.28, 0.18, 0.1, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_charge"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.95, 0.55, 0.12, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom"]
-bg_color = Color(0.28, 0.18, 0.1, 1)
-
-[node name="GameHUD" type="Control"]
+[node name="GameHUD" type="Control" unique_id=859345123]
+z_index = 3500
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,112 +28,232 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_hud")
 
-[node name="TopBar" type="PanelContainer" parent="."]
+[node name="TopBar" type="MarginContainer" parent="." unique_id=879992727]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 72.0
+offset_bottom = 130.0
 grow_horizontal = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_top")
-
-[node name="Margin" type="MarginContainer" parent="TopBar"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 12
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 8
 
-[node name="HBox" type="HBoxContainer" parent="TopBar/Margin"]
+[node name="HBox" type="HBoxContainer" parent="TopBar" unique_id=1602257628]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 0
 
-[node name="BackButton" type="Button" parent="TopBar/Margin/HBox"]
+[node name="LeftSlot" type="CenterContainer" parent="TopBar/HBox" unique_id=954682652]
+custom_minimum_size = Vector2(72, 60)
+layout_mode = 2
+
+[node name="BackButton" type="TextureButton" parent="TopBar/HBox/LeftSlot" unique_id=1456397653]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(56, 56)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "←"
+texture_normal = ExtResource("2_back")
+ignore_texture_size = true
+stretch_mode = 5
 
-[node name="LevelLabel" type="Label" parent="TopBar/Margin/HBox"]
+[node name="StatsCenter" type="HBoxContainer" parent="TopBar/HBox" unique_id=1124164926]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 56
+alignment = 1
+
+[node name="LevelStat" type="VBoxContainer" parent="TopBar/HBox/StatsCenter" unique_id=786092705]
+custom_minimum_size = Vector2(108, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="LevelCaption" type="Label" parent="TopBar/HBox/StatsCenter/LevelStat" unique_id=1044574998]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 22
-text = "关卡 1"
-vertical_alignment = 1
-
-[node name="ScoreLabel" type="Label" parent="TopBar/Margin/HBox"]
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "分数 0"
+text = "关卡"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="MatchLabel" type="Label" parent="TopBar/Margin/HBox"]
-custom_minimum_size = Vector2(100, 0)
+[node name="LevelValue" type="Label" parent="TopBar/HBox/StatsCenter/LevelStat" unique_id=334223786]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "匹配 0"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "1"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="MenuButton" type="Button" parent="TopBar/Margin/HBox"]
+[node name="ScoreStat" type="VBoxContainer" parent="TopBar/HBox/StatsCenter" unique_id=401660637]
+custom_minimum_size = Vector2(108, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="ScoreCaption" type="Label" parent="TopBar/HBox/StatsCenter/ScoreStat" unique_id=523502055]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.9, 0.84, 1)
+theme_override_font_sizes/font_size = 22
+text = "分数"
+horizontal_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="TopBar/HBox/StatsCenter/ScoreStat" unique_id=707477681]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "0"
+horizontal_alignment = 1
+
+[node name="MatchStat" type="VBoxContainer" parent="TopBar/HBox/StatsCenter" unique_id=1875184158]
+custom_minimum_size = Vector2(108, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="MatchCaption" type="Label" parent="TopBar/HBox/StatsCenter/MatchStat" unique_id=243008217]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.9, 0.84, 1)
+theme_override_font_sizes/font_size = 22
+text = "匹配"
+horizontal_alignment = 1
+
+[node name="MatchValue" type="Label" parent="TopBar/HBox/StatsCenter/MatchStat" unique_id=2011382834]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "0"
+horizontal_alignment = 1
+
+[node name="RightSlot" type="CenterContainer" parent="TopBar/HBox" unique_id=1027224217]
+custom_minimum_size = Vector2(72, 60)
+layout_mode = 2
+
+[node name="MenuButton" type="TextureButton" parent="TopBar/HBox/RightSlot" unique_id=1531323859]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(56, 56)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "☰"
+texture_normal = ExtResource("3_menu")
+ignore_texture_size = true
+stretch_mode = 5
 
-[node name="BottomBar" type="PanelContainer" parent="."]
+[node name="PlayTouchArea" type="Control" parent="." unique_id=1932358054]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 178.0
+offset_bottom = -132.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FloatTip" type="Label" parent="." unique_id=804475115]
+visible = false
+z_index = 100
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -220.0
+offset_top = 186.0
+offset_right = 220.0
+offset_bottom = 222.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.1, 0.08, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
+text = "该麻将被盖住"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="ScorePopLayer" type="Control" parent="." unique_id=1195333364]
+z_index = 100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Tools" type="HBoxContainer" parent="." unique_id=248500129]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -120.0
+offset_top = -132.0
 grow_horizontal = 2
 grow_vertical = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_bottom")
-
-[node name="Tools" type="HBoxContainer" parent="BottomBar"]
-layout_mode = 2
+theme_override_constants/separation = 72
 alignment = 1
-theme_override_constants/separation = 80
 
-[node name="ShuffleButton" type="Button" parent="BottomBar/Tools"]
+[node name="ShuffleButton" type="TextureButton" parent="Tools" unique_id=1752376455]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(88, 88)
+custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "洗牌"
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("4_shuffle")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="ShuffleBadge" type="Label" parent="BottomBar/Tools/ShuffleButton"]
-layout_mode = 0
-offset_left = 60.0
-offset_top = -4.0
-offset_right = 88.0
-offset_bottom = 24.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 14
-text = "∞"
-horizontal_alignment = 1
+[node name="ShuffleChargeBadge" type="PanelContainer" parent="Tools/ShuffleButton" unique_id=689192489]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -44.0
+offset_top = -8.0
+offset_bottom = 34.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_charge")
 
-[node name="HintButton" type="Button" parent="BottomBar/Tools"]
+[node name="ShuffleChargeLabel" type="Label" parent="Tools/ShuffleButton/ShuffleChargeBadge" unique_id=35171835]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(88, 88)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "提示"
-
-[node name="HintBadge" type="Label" parent="BottomBar/Tools/HintButton"]
-layout_mode = 0
-offset_left = 60.0
-offset_top = -4.0
-offset_right = 88.0
-offset_bottom = 24.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 14
-text = "∞"
+theme_override_colors/font_outline_color = Color(0.45, 0.22, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 22
+text = "2"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HintButton" type="TextureButton" parent="Tools" unique_id=1954151876]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("5_hint")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="HintChargeBadge" type="PanelContainer" parent="Tools/HintButton" unique_id=612383098]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -44.0
+offset_top = -8.0
+offset_bottom = 34.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_charge")
+
+[node name="HintChargeLabel" type="Label" parent="Tools/HintButton/HintChargeBadge" unique_id=61474995]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.45, 0.22, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 22
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1

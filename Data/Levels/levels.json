@@ -1,42 +1,24 @@
 {
   "levels": [
-    {
-      "id": 1,
-      "name": "初识金字塔",
-      "layout_path": "res://Data/Layouts/demo_12.json",
-      "difficulty": 1,
-      "tile_pool": [
-        "wan_1", "wan_9", "tiao_3", "tiao_7",
-        "bing_5", "bing_8", "wind_east", "wind_south",
-        "dragon_red", "dragon_green", "wan_5", "wan_6"
-      ]
-    },
-    {
-      "id": 2,
-      "name": "宽塔",
-      "layout_path": "res://Data/Layouts/demo_16.json",
-      "difficulty": 2,
-      "tile_pool": [
-        "wan_1", "wan_2", "wan_3", "wan_4", "wan_5", "wan_6",
-        "tiao_1", "tiao_2", "tiao_3", "tiao_4", "tiao_5", "tiao_6",
-        "bing_1", "bing_2", "bing_3", "bing_4", "bing_5", "bing_6",
-        "wind_east", "wind_south", "wind_west", "wind_north",
-        "dragon_red", "dragon_green"
-      ]
-    },
-    {
-      "id": 3,
-      "name": "大师挑战",
-      "layout_path": "res://Data/Layouts/demo_12.json",
-      "difficulty": 3,
-      "tile_pool": [
-        "wan_1", "wan_2", "wan_3", "wan_4", "wan_5", "wan_6",
-        "wan_7", "wan_8", "wan_9", "tiao_1", "tiao_2", "tiao_3",
-        "tiao_4", "tiao_5", "tiao_6", "tiao_7", "tiao_8", "tiao_9",
-        "bing_1", "bing_2", "bing_3", "bing_4", "bing_5", "bing_6",
-        "wind_east", "wind_south", "wind_west", "wind_north",
-        "dragon_red", "dragon_green", "dragon_white"
-      ]
-    }
+	{"id": 1, "name": "初出茅庐", "difficulty": 1},
+	{"id": 2, "name": "小试牛刀", "difficulty": 1},
+	{"id": 3, "name": "渐入佳境", "difficulty": 1},
+	{"id": 4, "name": "稳步前行", "difficulty": 1},
+	{"id": 5, "name": "双层进阶", "difficulty": 2},
+	{"id": 6, "name": "叠层挑战", "difficulty": 2},
+	{"id": 7, "name": "双层精通", "difficulty": 2},
+	{"id": 8, "name": "塔影成双", "difficulty": 2},
+	{"id": 9, "name": "步步为营", "difficulty": 2},
+	{"id": 10, "name": "双层大师", "difficulty": 2},
+	{"id": 11, "name": "三层起步", "difficulty": 3},
+	{"id": 12, "name": "层峦渐起", "difficulty": 3},
+	{"id": 13, "name": "高塔三重", "difficulty": 3},
+	{"id": 14, "name": "叠影重重", "difficulty": 3},
+	{"id": 15, "name": "深塔探秘", "difficulty": 4},
+	{"id": 16, "name": "迷宫三层", "difficulty": 4},
+	{"id": 17, "name": "大师前奏", "difficulty": 4},
+	{"id": 18, "name": "巅峰预备", "difficulty": 5},
+	{"id": 19, "name": "终极试炼", "difficulty": 5},
+	{"id": 20, "name": "麻将宗师", "difficulty": 5}
   ]
 }

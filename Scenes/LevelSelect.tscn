@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://dexlb2u5csc0e"]
 
-[ext_resource type="Script" path="res://Scripts/level_select.gd" id="1_level_select"]
+[ext_resource type="Script" uid="uid://davtyaus28yey" path="res://Scripts/level_select.gd" id="1_level_select"]
+[ext_resource type="Texture2D" uid="uid://cefp3mr2oghj7" path="res://Assets/UI/Home/bg.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://c3r0u62mln11c" path="res://Assets/UI/Home/logo_clean.png" id="3_logo"]
 
-[node name="LevelSelect" type="Control"]
+[node name="LevelSelect" type="Control" unique_id=1784755320]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -10,9 +12,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_level_select")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Bg" type="TextureRect" parent="." unique_id=1549884528]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,34 +23,57 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.55)
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1899188158]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 48
 
-[node name="Panel" type="VBoxContainer" parent="Center"]
-custom_minimum_size = Vector2(600, 0)
+[node name="Panel" type="VBoxContainer" parent="Margin" unique_id=573140295]
 layout_mode = 2
-theme_override_constants/separation = 28
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+alignment = 1
 
-[node name="TitleLabel" type="Label" parent="Center/Panel"]
+[node name="TitleLabel" type="TextureRect" parent="Margin/Panel" unique_id=1105277144]
+custom_minimum_size = Vector2(480, 130)
 layout_mode = 2
-theme_override_font_sizes/font_size = 44
-text = "Vita Mahjong"
-horizontal_alignment = 1
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="HintLabel" type="Label" parent="Center/Panel"]
+[node name="HintLabel" type="Label" parent="Margin/Panel" unique_id=1420067438]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.75, 0.78, 0.82, 1)
-text = "选择关卡"
+text = "已解锁 0 / 0 关"
 horizontal_alignment = 1
 
-[node name="LevelList" type="VBoxContainer" parent="Center/Panel"]
+[node name="LevelScroll" type="ScrollContainer" parent="Margin/Panel" unique_id=1681661413]
 layout_mode = 2
-theme_override_constants/separation = 18
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+scroll_deadzone = 16
+
+[node name="LevelList" type="VBoxContainer" parent="Margin/Panel/LevelScroll" unique_id=492267060]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+alignment = 1

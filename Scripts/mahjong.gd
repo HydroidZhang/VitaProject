@@ -1,16 +1,18 @@
 class_name MahjongTile
 extends Area2D
 
-signal pressed
-
 @onready var _shadow: ColorRect = $Shadow
 @onready var _side_bottom: ColorRect = $SideBottom
 @onready var _side_right: ColorRect = $SideRight
 @onready var _face: ColorRect = $Face
+@onready var _face_sprite: Sprite2D = $FaceSprite
 @onready var _face_highlight: ColorRect = $FaceHighlight
 @onready var _label: Label = $Label
 @onready var _selection_frame: Node2D = $SelectionFrame
 @onready var _hint_frame: Node2D = $HintFrame
+@onready var _left_block: ColorRect = $BlockMarks/LeftMark
+@onready var _right_block: ColorRect = $BlockMarks/RightMark
+@onready var _cover_block: ColorRect = $BlockMarks/CoverMark
 
 var tile_type: TileType = null
 var cell: CellData = null
@@ -21,11 +23,20 @@ var _selected: bool = false
 var _match_hint: bool = false
 var _base_color: Color = Color.WHITE
 var _base_z_index: int = 0
+var _eliminating: bool = false
+var _block_info: Dictionary = {}
 
 
 func _ready() -> void:
-	input_event.connect(_on_input_event)
+	input_pickable = false
 	_disable_control_input_passthrough()
+	_face.visible = false
+	if tile_type != null:
+		_apply_visual()
+
+
+func can_receive_pointer() -> bool:
+	return not _eliminating
 
 
 func set_base_z_index(value: int) -> void:
@@ -36,13 +47,24 @@ func setup(tile_id: String, tile_layer: int = 0, cell_data: CellData = null) -> 
 	cell = cell_data
 	layer = tile_layer
 	tile_type = TileRegistry.get_tile(tile_id)
-	_apply_visual()
+	if is_node_ready():
+		_apply_visual()
+	else:
+		call_deferred("_apply_visual")
 
 
 func set_selected(selected: bool) -> void:
+	if _eliminating:
+		return
+
+	var was_selected := _selected
 	_selected = selected
 	z_index = _base_z_index + (100 if _selected else 0)
 	_apply_visual()
+	if selected and not was_selected:
+		_play_select_bounce()
+	elif not selected:
+		scale = Vector2.ONE
 
 
 func set_match_hint(hint: bool) -> void:
@@ -50,9 +72,30 @@ func set_match_hint(hint: bool) -> void:
 	_apply_visual()
 
 
-func set_free(free: bool) -> void:
+func set_free(free: bool, block_info: Dictionary = {}) -> void:
 	is_free = free
+	_block_info = block_info
 	_apply_visual()
+
+
+func begin_pair_elimination(top_z: int) -> void:
+	_eliminating = true
+	_selected = false
+	_match_hint = false
+	input_pickable = false
+	z_index = top_z
+	scale = Vector2.ONE
+	_selection_frame.visible = false
+	_hint_frame.visible = false
+
+
+func _play_select_bounce() -> void:
+	scale = Vector2.ONE
+	var tween := create_tween()
+	tween.tween_property(self, "scale", Vector2(1.12, 1.12), 0.1)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", Vector2(1.07, 1.07), 0.08)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
 func _disable_control_input_passthrough() -> void:
@@ -67,36 +110,21 @@ func _set_ignore_mouse_recursive(node: Node) -> void:
 		_set_ignore_mouse_recursive(child)
 
 
-func _on_input_event(
-	_viewport: Node,
-	event: InputEvent,
-	_shape_idx: int,
-) -> void:
-	if not is_free:
-		return
-	if _is_press_event(event):
-		pressed.emit()
-		get_viewport().set_input_as_handled()
-
-
-func _is_press_event(event: InputEvent) -> bool:
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		return mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT
-	if event is InputEventScreenTouch:
-		var touch_event := event as InputEventScreenTouch
-		return touch_event.pressed and touch_event.index == 0
-	return false
-
-
 func _apply_visual() -> void:
+	if not is_node_ready():
+		return
+
 	_selection_frame.visible = _selected and is_free
 	_hint_frame.visible = _match_hint and is_free and not _selected
-	scale = Vector2(1.07, 1.07) if _selected else Vector2.ONE
+	if not _eliminating:
+		scale = Vector2(1.07, 1.07) if _selected else Vector2.ONE
 
 	if tile_type == null:
 		_label.text = ""
-		_face.color = Color(0.35, 0.35, 0.35)
+		_label.visible = false
+		_face_sprite.texture = TileTextureAtlas.get_face_texture(null)
+		_face_sprite.scale = TileTextureAtlas.get_sprite_scale(_face_sprite.texture)
+		_set_procedural_parts_visible(true)
 		_side_right.color = Color(0.25, 0.25, 0.25)
 		_side_bottom.color = Color(0.2, 0.2, 0.2)
 		_shadow.color = Color(0, 0, 0, 0.2)
@@ -104,8 +132,14 @@ func _apply_visual() -> void:
 		modulate = Color(0.65, 0.65, 0.65, 1)
 		return
 
-	_label.text = tile_type.display_name
+	var uses_file_texture := TileTextureAtlas.uses_file_texture(tile_type)
+	_label.visible = not uses_file_texture
+	_label.text = "" if uses_file_texture else tile_type.display_name
 	_base_color = TileType.get_category_color(tile_type.category)
+	_face_sprite.texture = TileTextureAtlas.get_face_texture(tile_type)
+	_face_sprite.scale = TileTextureAtlas.get_sprite_scale(_face_sprite.texture)
+	_face_sprite.position = Vector2.ZERO if uses_file_texture else Vector2(-3.5, -4.0)
+	_set_procedural_parts_visible(not uses_file_texture)
 
 	var face_color := _base_color
 	if _selected:
@@ -121,9 +155,40 @@ func _apply_visual() -> void:
 			_:
 				face_color = _base_color.lightened(0.1)
 
-	_face.color = face_color
-	_side_right.color = face_color.darkened(0.25)
-	_side_bottom.color = face_color.darkened(0.38)
-	_face_highlight.color = Color(1, 1, 1, 0.35 if _selected else 0.22 + layer * 0.06)
-	_shadow.color = Color(0, 0, 0, clampf(0.38 - layer * 0.08, 0.14, 0.38))
+	_face_sprite.modulate = Color.WHITE if is_free else Color(0.78, 0.78, 0.78)
+	if uses_file_texture:
+		_shadow.color = Color(0, 0, 0, clampf(0.32 - layer * 0.06, 0.12, 0.32))
+		_face_highlight.color = Color(1, 1, 1, 0.18 if _selected else 0.08)
+	else:
+		_side_right.color = face_color.darkened(0.25)
+		_side_bottom.color = face_color.darkened(0.38)
+		_face_highlight.color = Color(1, 1, 1, 0.35 if _selected else 0.22 + layer * 0.06)
+		_shadow.color = Color(0, 0, 0, clampf(0.38 - layer * 0.08, 0.14, 0.38))
 	modulate = Color.WHITE if is_free else Color(0.72, 0.72, 0.72, 1)
+	_update_block_marks()
+
+
+func _set_procedural_parts_visible(parts_visible: bool) -> void:
+	_face.visible = false
+	_side_right.visible = parts_visible
+	_side_bottom.visible = parts_visible
+
+
+func _update_block_marks() -> void:
+	_left_block.visible = false
+	_right_block.visible = false
+	_cover_block.visible = false
+
+
+func get_block_message() -> String:
+	if bool(_block_info.get("covered", false)):
+		return "该麻将被盖住"
+	var left_blocked := bool(_block_info.get("left_blocked", false))
+	var right_blocked := bool(_block_info.get("right_blocked", false))
+	if left_blocked and right_blocked:
+		return "两边被锁住"
+	if left_blocked:
+		return "左侧被锁住"
+	if right_blocked:
+		return "右侧被锁住"
+	return "无法选择"

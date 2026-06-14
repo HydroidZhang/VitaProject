@@ -1,69 +1,75 @@
 [gd_scene format=3 uid="uid://dys53dilaamb3"]
 
-[ext_resource type="Script" path="res://Scripts/level_button.gd" id="1_level_button"]
+[ext_resource type="Script" uid="uid://d35787r2tbp0c" path="res://Scripts/level_button.gd" id="1_level_button"]
+[ext_resource type="Texture2D" uid="uid://bm3itp5hrl425" path="res://Assets/UI/Home/btn_play.png" id="2_play"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
-bg_color = Color(0.22, 0.24, 0.28, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hover"]
-bg_color = Color(0.28, 0.32, 0.38, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_disabled"]
-bg_color = Color(0.18, 0.19, 0.22, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[node name="LevelButton" type="PanelContainer"]
-custom_minimum_size = Vector2(600, 76)
-size_flags_horizontal = 3
-mouse_filter = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_normal")
+[node name="LevelButton" type="Control"]
+custom_minimum_size = Vector2(600, 152)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
 script = ExtResource("1_level_button")
 
+[node name="Bg" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_play")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Margin" type="MarginContainer" parent="."]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 14
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 22
 
 [node name="HBox" type="HBoxContainer" parent="Margin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+alignment = 1
 
 [node name="IdLabel" type="Label" parent="Margin/HBox"]
-custom_minimum_size = Vector2(88, 0)
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.35, 0.18, 0.08, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 26
 text = "第 1 关"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="NameLabel" type="Label" parent="Margin/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.35, 0.18, 0.08, 1)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 26
 text = "关卡名"
 vertical_alignment = 1
 
 [node name="StarsLabel" type="Label" parent="Margin/HBox"]
-custom_minimum_size = Vector2(72, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.95, 0.78, 0.2, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 text = "★★"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -71,6 +77,7 @@ vertical_alignment = 1
 [node name="LockLabel" type="Label" parent="Margin/HBox"]
 custom_minimum_size = Vector2(36, 0)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_font_sizes/font_size = 24
 text = "🔒"
 horizontal_alignment = 1
