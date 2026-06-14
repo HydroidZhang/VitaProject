@@ -8,6 +8,7 @@ signal closed
 @onready var _volume_value: Label = %VolumeValue
 @onready var _close_button: Button = %CloseButton
 @onready var _dim: ColorRect = $Dim
+@onready var _panel: PanelContainer = $Panel
 
 var _style_music_on: StyleBoxFlat
 var _style_music_off: StyleBoxFlat
@@ -35,9 +36,20 @@ func open() -> void:
 	_sync_from_settings()
 	visible = true
 	move_to_front()
+	await get_tree().process_frame
+	await ScreenTransition.show_group([
+		[_dim, ScreenTransition.Kind.FADE],
+		[_panel, ScreenTransition.Kind.SCALE_IN],
+	])
 
 
 func close() -> void:
+	if not visible:
+		return
+	await ScreenTransition.hide_group([
+		[_dim, ScreenTransition.Kind.FADE],
+		[_panel, ScreenTransition.Kind.SCALE_IN],
+	])
 	visible = false
 	closed.emit()
 

@@ -9,6 +9,7 @@ extends Area2D
 @onready var _face_highlight: ColorRect = $FaceHighlight
 @onready var _label: Label = $Label
 @onready var _selection_frame: Node2D = $SelectionFrame
+@onready var _selection_sparkles: CPUParticles2D = $SelectionFrame/SelectionSparkles
 @onready var _hint_frame: Node2D = $HintFrame
 @onready var _left_block: ColorRect = $BlockMarks/LeftMark
 @onready var _right_block: ColorRect = $BlockMarks/RightMark
@@ -87,14 +88,15 @@ func begin_pair_elimination(top_z: int) -> void:
 	scale = Vector2.ONE
 	_selection_frame.visible = false
 	_hint_frame.visible = false
+	_selection_sparkles.emitting = false
 
 
 func _play_select_bounce() -> void:
 	scale = Vector2.ONE
 	var tween := create_tween()
-	tween.tween_property(self, "scale", Vector2(1.12, 1.12), 0.1)\
+	tween.tween_property(self, "scale", Vector2(1.14, 1.14), 0.1)\
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(self, "scale", Vector2(1.07, 1.07), 0.08)\
+	tween.tween_property(self, "scale", Vector2(1.08, 1.08), 0.08)\
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
@@ -116,8 +118,9 @@ func _apply_visual() -> void:
 
 	_selection_frame.visible = _selected and is_free
 	_hint_frame.visible = _match_hint and is_free and not _selected
+	_selection_sparkles.emitting = _selected and is_free
 	if not _eliminating:
-		scale = Vector2(1.07, 1.07) if _selected else Vector2.ONE
+		scale = Vector2(1.08, 1.08) if _selected else Vector2.ONE
 
 	if tile_type == null:
 		_label.text = ""
@@ -156,16 +159,45 @@ func _apply_visual() -> void:
 				face_color = _base_color.lightened(0.1)
 
 	_face_sprite.modulate = Color.WHITE if is_free else Color(0.78, 0.78, 0.78)
-	if uses_file_texture:
+	_apply_face_highlight(uses_file_texture, face_color)
+	if _selected and is_free:
+		_side_right.color = Color(0.98, 0.84, 0.16, 1)
+		_side_bottom.color = Color(0.9, 0.74, 0.1, 1)
+		_shadow.color = Color(0.82, 0.62, 0.04, 0.38)
+	elif uses_file_texture:
 		_shadow.color = Color(0, 0, 0, clampf(0.32 - layer * 0.06, 0.12, 0.32))
-		_face_highlight.color = Color(1, 1, 1, 0.18 if _selected else 0.08)
 	else:
 		_side_right.color = face_color.darkened(0.25)
 		_side_bottom.color = face_color.darkened(0.38)
-		_face_highlight.color = Color(1, 1, 1, 0.35 if _selected else 0.22 + layer * 0.06)
 		_shadow.color = Color(0, 0, 0, clampf(0.38 - layer * 0.08, 0.14, 0.38))
 	modulate = Color.WHITE if is_free else Color(0.72, 0.72, 0.72, 1)
 	_update_block_marks()
+
+
+func _apply_face_highlight(uses_file_texture: bool, face_color: Color) -> void:
+	if _selected and is_free:
+		_set_face_highlight_rect(-34.0, -49.0, 27.0, 43.0)
+		_face_highlight.color = Color(1, 0.94, 0.32, 0.18)
+		return
+
+	if _match_hint and is_free:
+		_set_face_highlight_rect(-34.0, -49.0, 27.0, 43.0)
+		_face_highlight.color = Color(0.52, 1, 0.64, 0.16)
+		return
+
+	if uses_file_texture:
+		_set_face_highlight_rect(-34.0, -49.0, 27.0, -44.0)
+		_face_highlight.color = Color(1, 1, 1, 0.08)
+	else:
+		_set_face_highlight_rect(-34.0, -49.0, 27.0, -44.0)
+		_face_highlight.color = Color(1, 1, 1, 0.22 + layer * 0.06)
+
+
+func _set_face_highlight_rect(left: float, top: float, right: float, bottom: float) -> void:
+	_face_highlight.offset_left = left
+	_face_highlight.offset_top = top
+	_face_highlight.offset_right = right
+	_face_highlight.offset_bottom = bottom
 
 
 func _set_procedural_parts_visible(parts_visible: bool) -> void:

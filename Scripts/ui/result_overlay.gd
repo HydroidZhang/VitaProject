@@ -13,6 +13,8 @@ signal home_pressed
 @onready var _next_button: TextureButton = %NextButton
 @onready var _next_label: Label = $MainColumn/Content/NextButton/NextLabel
 @onready var _home_button: Button = $MainColumn/Content/HomeButton
+@onready var _dim: ColorRect = $Dim
+@onready var _main_column: VBoxContainer = $MainColumn
 
 var _next_level: LevelData = null
 
@@ -55,9 +57,20 @@ func show_result(
 
 	visible = true
 	move_to_front()
+	await get_tree().process_frame
+	await ScreenTransition.show_group([
+		[_dim, ScreenTransition.Kind.FADE],
+		[_main_column, ScreenTransition.Kind.SCALE_IN],
+	])
 
 
 func hide_result() -> void:
+	if not visible:
+		return
+	await ScreenTransition.hide_group([
+		[_dim, ScreenTransition.Kind.FADE],
+		[_main_column, ScreenTransition.Kind.SCALE_IN],
+	])
 	visible = false
 	_next_level = null
 

@@ -221,8 +221,9 @@ res://
 | 底层 | Shadow | 投影 |
 | 侧面 | SideBottom / SideRight | 厚度感 |
 | 正面 | Face + Label | 牌面文字与花色底色 |
-| 选中 | SelectionFrame | 金色边框 + 光晕 |
-| 提示 | HintFrame | 绿色配对提示边框 |
+| 选中 | SelectionFrame | 加粗金黄边框 + 牌面黄蒙层 + 外圈光晕 + 粒子 |
+| 提示 | HintFrame | 薄荷绿铺满蒙层 + 细绿边框 |
+| 消除 | MatchElimination + MatchCollisionEffect | 撞合碎裂、碎屑粒子（挂 TileLayer 坐标） |
 
 层间明暗：底层更暗 → 顶层更亮，配合 `LAYER_OFFSET` 强化前后感。
 
@@ -238,7 +239,8 @@ res://
 | **P3** | 随机洗牌 + DFS 可解性验证 | ✅ 完成 | `tile-assignment` |
 | **P4** | 多关卡 + 关卡选择 UI + 进度 | ✅ 完成 | `level-progression` |
 | **P4+** | Vita 风格三屏 UI 白模 | ✅ 完成 | — |
-| **P5** | 贴图资源 + 动画 + 音效 | 🚧 进行中 | `tile-visuals` |
+| **P5** | 贴图资源 + 动画 + 音效 | ✅ 完成 | `tile-visuals` |
+| **P5+** | 连击 / 选中强化 / 碰撞碎裂 / 设置大控件 | ✅ 完成 | `tile-gameplay`, `game-ui` |
 
 ### P4 已实现
 

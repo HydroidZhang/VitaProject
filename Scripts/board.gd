@@ -15,6 +15,7 @@ var _elapsed_sec: float = 0.0
 var _score: int = 0
 var _matches: int = 0
 var _playing: bool = false
+var _shuffling: bool = false
 var _combo_tracker := ComboTracker.new()
 
 
@@ -27,7 +28,7 @@ func _ready() -> void:
 
 
 func handle_pointer_at(canvas_pos: Vector2) -> void:
-	if not _playing:
+	if not _playing or _shuffling:
 		return
 	_controller.handle_pointer_at(canvas_pos)
 
@@ -53,13 +54,27 @@ func start_level_data(level: LevelData, viewport_size: Vector2 = Vector2.ZERO) -
 func regenerate_level(viewport_size: Vector2 = Vector2.ZERO) -> void:
 	if viewport_size == Vector2.ZERO:
 		viewport_size = UIConstants.viewport_size()
-	if not _playing:
+	if not _playing or _shuffling:
 		return
+	_regenerate_level_animated(viewport_size)
+
+
+func _regenerate_level_animated(viewport_size: Vector2) -> void:
+	_shuffling = true
+	_controller.reset()
+
+	var existing_tiles := _collect_tiles()
+	if not existing_tiles.is_empty():
+		await ShuffleEffect.collect(_tile_layer, existing_tiles)
+
 	_tile_pool = LevelCatalog.tile_pool_for(_current_level_id)
-	_deal_generated_board_async(viewport_size, false)
+	await _deal_generated_board_async(viewport_size, false, true)
+	_shuffling = false
 
 
 func request_hint() -> void:
+	if _shuffling:
+		return
 	_controller.show_hint()
 
 
@@ -72,6 +87,7 @@ func stop_and_clear() -> void:
 func _deal_generated_board_async(
 	viewport_size: Vector2,
 	reset_stats: bool,
+	animated_deal: bool = false,
 ) -> void:
 	_clear_tiles()
 	_controller.reset()
@@ -80,10 +96,12 @@ func _deal_generated_board_async(
 	var generated := RuntimeLevelBuilder.generate(_current_level_id, _tile_pool)
 	if not generated.get("ok", false):
 		_playing = false
+		_shuffling = false
 		push_error("Failed to generate solvable board for level %d" % _current_level_id)
 		return
 
 	if not _playing:
+		_shuffling = false
 		return
 
 	var cells: Array[CellData] = generated.get("cells", [])
@@ -101,9 +119,11 @@ func _deal_generated_board_async(
 	if not _playing:
 		for tile in tiles:
 			tile.queue_free()
+		_shuffling = false
 		return
 	if tiles.is_empty():
 		_playing = false
+		_shuffling = false
 		return
 
 	if reset_stats:
@@ -111,6 +131,9 @@ func _deal_generated_board_async(
 		_matches = 0
 		_combo_tracker.reset()
 		stats_changed.emit(_score, _matches)
+
+	if animated_deal:
+		await ShuffleEffect.deal(_tile_layer, tiles)
 
 	_controller.initialize(tiles)
 
@@ -128,6 +151,16 @@ func _collision_pos_to_canvas(layer_pos: Vector2) -> Vector2:
 	var canvas_pos := _tile_layer.get_global_transform_with_canvas() * layer_pos
 	var above := TileConstants.HALF_SIZE.y * _tile_layer.scale.y + UIConstants.SCORE_POP_ABOVE_TILE_PX
 	return canvas_pos + Vector2(0.0, -above)
+
+
+func _collect_tiles() -> Array[MahjongTile]:
+	var tiles: Array[MahjongTile] = []
+	if _tile_layer == null:
+		return tiles
+	for child in _tile_layer.get_children():
+		if child is MahjongTile:
+			tiles.append(child)
+	return tiles
 
 
 func _clear_tiles() -> void:

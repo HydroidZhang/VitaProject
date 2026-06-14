@@ -18,6 +18,7 @@ var _play_bg: TextureRect
 var _progress: ProgressManager
 var _current_level: LevelData = null
 var _paused_from_game: bool = false
+var _transitioning: bool = false
 
 
 func _ready() -> void:
@@ -42,8 +43,8 @@ func _bootstrap_ui() -> void:
 
 	_home = HomeScreenScene.instantiate()
 	$CanvasLayer.add_child(_home)
-	_home.play_pressed.connect(_start_level)
-	_home.level_select_pressed.connect(_show_level_select)
+	_home.play_pressed.connect(_on_play_pressed)
+	_home.level_select_pressed.connect(_on_level_select_pressed)
 	_home.settings_pressed.connect(_show_settings)
 
 	_level_select = LevelSelectScene.instantiate()
@@ -54,10 +55,10 @@ func _bootstrap_ui() -> void:
 	_game_hud = GameHUDScene.instantiate()
 	_game_hud.visible = false
 	$CanvasLayer.add_child(_game_hud)
-	_game_hud.back_pressed.connect(_go_home)
+	_game_hud.back_pressed.connect(_on_back_pressed)
 	_game_hud.shuffle_pressed.connect(_on_shuffle)
 	_game_hud.hint_pressed.connect(_on_hint)
-	_game_hud.menu_pressed.connect(_show_level_select)
+	_game_hud.menu_pressed.connect(_on_menu_pressed)
 	_game_hud.board_pointer_at.connect(_on_board_pointer_at)
 
 	_settings_overlay = SettingsOverlayScene.instantiate()
@@ -68,7 +69,7 @@ func _bootstrap_ui() -> void:
 	_result_overlay.z_index = 20
 	$CanvasLayer.add_child(_result_overlay)
 	_result_overlay.next_level_pressed.connect(_on_next_level)
-	_result_overlay.home_pressed.connect(_go_home)
+	_result_overlay.home_pressed.connect(_on_result_home_pressed)
 
 	GameSettings.changed.connect(_on_game_settings_changed)
 	BgmManager.play_home()
@@ -100,68 +101,183 @@ func _on_match_scored(canvas_pos: Vector2, amount: int, combo: int = 1) -> void:
 		_game_hud.show_score_pop(canvas_pos, amount, combo)
 
 
-func _start_level(level: LevelData) -> void:
+func _on_play_pressed(level: LevelData) -> void:
+	_run_start_level(level)
+
+
+func _on_level_select_pressed() -> void:
+	_run_show_level_select()
+
+
+func _on_back_pressed() -> void:
+	_run_go_home()
+
+
+func _on_menu_pressed() -> void:
+	_run_show_level_select()
+
+
+func _on_result_home_pressed() -> void:
+	_run_go_home()
+
+
+func _run_start_level(level: LevelData) -> void:
+	if _transitioning:
+		return
+	_transitioning = true
 	_current_level = level
-	_show_game(false)
+	await _enter_game(false)
 	_game_hud.start_level(level)
 	_board.start_level_data(level, ScreenAdapter.get_layout_size())
+	_transitioning = false
 
 
 func _on_level_selected_from_list(level: LevelData) -> void:
-	_level_select.visible = false
-	_start_level(level)
+	if _transitioning:
+		return
+	_run_start_level_from_list(level)
 
 
-func _show_game(resume_running: bool = false) -> void:
+func _run_start_level_from_list(level: LevelData) -> void:
+	if _transitioning:
+		return
+	_transitioning = true
+	if _level_select.visible:
+		await ScreenTransition.hide_out(
+			_level_select,
+			ScreenTransition.Kind.FADE,
+			ScreenTransition.GENTLE_HIDE_DURATION,
+		)
+	_current_level = level
+	await _enter_game(false)
+	_game_hud.start_level(level)
+	_board.start_level_data(level, ScreenAdapter.get_layout_size())
+	_transitioning = false
+
+
+func _enter_game(resume_running: bool = false) -> void:
 	_paused_from_game = false
-	_home.visible = false
-	_level_select.visible = false
-	_result_overlay.hide_result()
+	if _result_overlay.visible:
+		await _result_overlay.hide_result()
+
+	var hide_items: Array = []
+	if _home.visible:
+		hide_items.append([_home, ScreenTransition.Kind.FADE])
+	if _level_select.visible:
+		hide_items.append([_level_select, ScreenTransition.Kind.FADE])
+
 	_play_bg.visible = true
 	_game_hud.visible = true
 	_board.visible = true
+
+	var show_items: Array = [
+		[_play_bg, ScreenTransition.Kind.FADE],
+		[_game_hud, ScreenTransition.Kind.FADE],
+		[_board, ScreenTransition.Kind.FADE],
+	]
+
+	if hide_items.is_empty():
+		await get_tree().process_frame
+		await ScreenTransition.show_group(show_items, ScreenTransition.GENTLE_SHOW_DURATION)
+	else:
+		await ScreenTransition.crossfade(hide_items, show_items)
+
 	if resume_running:
 		BgmManager.play_running()
 	else:
 		BgmManager.play_level_start()
 
 
-func _go_home() -> void:
+func _run_go_home() -> void:
+	if _transitioning:
+		return
+	_transitioning = true
 	_paused_from_game = false
-	_play_bg.visible = false
-	_game_hud.visible = false
-	_board.visible = false
+
+	if _result_overlay.visible:
+		await _result_overlay.hide_result()
+
 	if _board.has_method("stop_and_clear"):
 		_board.stop_and_clear()
-	_result_overlay.hide_result()
+
 	_level_select.visible = false
-	_home.visible = true
 	_home.refresh()
+	_home.visible = true
+
+	if _board.visible or _game_hud.visible or _play_bg.visible:
+		await ScreenTransition.crossfade(
+			[
+				[_game_hud, ScreenTransition.Kind.FADE],
+				[_board, ScreenTransition.Kind.FADE],
+				[_play_bg, ScreenTransition.Kind.FADE],
+			],
+			[[_home, ScreenTransition.Kind.FADE]],
+		)
+	else:
+		await get_tree().process_frame
+		await ScreenTransition.show_in(
+			_home,
+			ScreenTransition.Kind.FADE,
+			ScreenTransition.GENTLE_SHOW_DURATION,
+		)
+
 	BgmManager.play_home()
+	_transitioning = false
 
 
 func _show_settings() -> void:
+	if _transitioning:
+		return
 	if _settings_overlay.has_method("open"):
 		_settings_overlay.open()
 
 
-func _show_level_select() -> void:
+func _run_show_level_select() -> void:
+	if _transitioning:
+		return
+	_transitioning = true
 	_paused_from_game = _board.visible
+
+	if _result_overlay.visible:
+		await _result_overlay.hide_result()
+
 	if _paused_from_game:
-		_play_bg.visible = false
-		_game_hud.visible = false
-		_board.visible = false
-	else:
-		_home.visible = false
-	_result_overlay.hide_result()
-	_level_select.visible = true
+		await ScreenTransition.hide_group([
+			[_game_hud, ScreenTransition.Kind.FADE],
+			[_board, ScreenTransition.Kind.FADE],
+			[_play_bg, ScreenTransition.Kind.FADE],
+		], ScreenTransition.GENTLE_HIDE_DURATION)
+	elif _home.visible:
+		if _level_select.has_method("refresh"):
+			_level_select.refresh()
+		_level_select.visible = true
+		await ScreenTransition.crossfade(
+			[[_home, ScreenTransition.Kind.FADE]],
+			[[_level_select, ScreenTransition.Kind.FADE]],
+		)
+		if not _paused_from_game:
+			BgmManager.play_home()
+		_transitioning = false
+		return
+
 	if _level_select.has_method("refresh"):
 		_level_select.refresh()
+	_level_select.visible = true
+	await get_tree().process_frame
+	await ScreenTransition.show_in(
+		_level_select,
+		ScreenTransition.Kind.FADE,
+		ScreenTransition.GENTLE_SHOW_DURATION,
+	)
+
 	if not _paused_from_game:
 		BgmManager.play_home()
+	_transitioning = false
 
 
 func _on_shuffle() -> void:
+	if _transitioning:
+		return
 	if not _game_hud.try_consume_shuffle():
 		return
 	if _board.visible and _board.has_method("regenerate_level"):
@@ -170,6 +286,8 @@ func _on_shuffle() -> void:
 
 
 func _on_hint() -> void:
+	if _transitioning:
+		return
 	if not _game_hud.try_consume_hint():
 		return
 	if _board.visible and _board.has_method("request_hint"):
@@ -191,18 +309,53 @@ func _on_level_cleared(
 	if level_id < max_id:
 		next_level = LevelRegistry.get_by_id(level_id + 1)
 
-	_game_hud.visible = false
-	_board.visible = false
-	_result_overlay.show_result(level_id, elapsed_sec, score, matches, next_level, max_combo)
+	_transitioning = true
+	await ScreenTransition.hide_group([
+		[_game_hud, ScreenTransition.Kind.FADE],
+		[_board, ScreenTransition.Kind.FADE],
+	])
+	await _result_overlay.show_result(
+		level_id, elapsed_sec, score, matches, next_level, max_combo
+	)
 	BgmManager.play_win()
+	_transitioning = false
 
 
 func _on_next_level(level: LevelData) -> void:
-	_result_overlay.hide_result()
-	_start_level(level)
+	_run_start_level(level)
+
+
+func _run_escape() -> void:
+	if _transitioning:
+		return
+	_transitioning = true
+	if _level_select.visible:
+		await ScreenTransition.hide_out(
+			_level_select,
+			ScreenTransition.Kind.FADE,
+			ScreenTransition.GENTLE_HIDE_DURATION,
+		)
+		if _paused_from_game:
+			await _enter_game(true)
+		else:
+			_home.visible = true
+			await get_tree().process_frame
+			await ScreenTransition.show_in(
+				_home,
+				ScreenTransition.Kind.FADE,
+				ScreenTransition.GENTLE_SHOW_DURATION,
+			)
+	elif _board.visible:
+		_transitioning = false
+		_run_go_home()
+		return
+	_transitioning = false
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _transitioning:
+		return
+
 	if _board.visible and _game_hud.visible and _game_hud.has_method("try_handle_board_pointer"):
 		if _game_hud.try_handle_board_pointer(event):
 			get_viewport().set_input_as_handled()
@@ -211,11 +364,5 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		var key_event := event as InputEventKey
 		if key_event.pressed and key_event.keycode == KEY_ESCAPE:
-			if _level_select.visible:
-				_level_select.visible = false
-				if _paused_from_game:
-					_show_game(true)
-				else:
-					_home.visible = true
-			elif _board.visible:
-				_go_home()
+			get_viewport().set_input_as_handled()
+			_run_escape()

@@ -63,14 +63,16 @@ static func build_from_cells(
 	for index in cells.size():
 		var cell := cells[index]
 		var tile: MahjongTile = MahjongScene.instantiate()
-		tile.position = (
+		var target_position := (
 			GridConverter.grid_to_world_from_cell(cell, origin)
 			+ GridConverter.layer_depth_offset(cell.layer)
 		)
+		tile.position = target_position
 		tile.z_index = GridConverter.compute_z_index(cell)
 		board_node.add_child(tile)
 		tile.set_base_z_index(tile.z_index)
 		tile.setup(tile_ids[index], cell.layer, cell)
+		tile.set_meta("shuffle_target_pos", target_position)
 		tiles.append(tile)
 
 	return tiles
