@@ -168,6 +168,30 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
+[node name="ComboTip" type="Label" parent="." unique_id=804475116]
+visible = false
+z_index = 101
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -40.0
+offset_right = -24.0
+offset_bottom = 40.0
+grow_horizontal = 0
+grow_vertical = 2
+pivot_offset = Vector2(98, 40)
+theme_override_colors/font_color = Color(1, 0.72, 0.18, 1)
+theme_override_colors/font_outline_color = Color(0.45, 0.12, 0.02, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 48
+text = "2连击!"
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="ScorePopLayer" type="Control" parent="." unique_id=1195333364]
 z_index = 100
 layout_mode = 1

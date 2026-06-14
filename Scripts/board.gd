@@ -1,9 +1,9 @@
 extends Node2D
 
-signal level_cleared(level_id: int, elapsed_sec: float, score: int, matches: int)
+signal level_cleared(level_id: int, elapsed_sec: float, score: int, matches: int, max_combo: int)
 signal stats_changed(score: int, matches: int)
 signal block_tip_requested(message: String)
-signal match_scored(board_pos: Vector2, amount: int)
+signal match_scored(board_pos: Vector2, amount: int, combo: int)
 
 @onready var _controller: BoardController = $BoardController
 
@@ -15,6 +15,7 @@ var _elapsed_sec: float = 0.0
 var _score: int = 0
 var _matches: int = 0
 var _playing: bool = false
+var _combo_tracker := ComboTracker.new()
 
 
 func _ready() -> void:
@@ -44,6 +45,7 @@ func start_level_data(level: LevelData, viewport_size: Vector2 = Vector2.ZERO) -
 	_elapsed_sec = 0.0
 	_score = 0
 	_matches = 0
+	_combo_tracker.reset()
 	_playing = true
 	_deal_generated_board_async(viewport_size, true)
 
@@ -107,16 +109,19 @@ func _deal_generated_board_async(
 	if reset_stats:
 		_score = 0
 		_matches = 0
+		_combo_tracker.reset()
 		stats_changed.emit(_score, _matches)
 
 	_controller.initialize(tiles)
 
 
-func _on_match_scored(layer_pos: Vector2, amount: int) -> void:
+func _on_match_scored(layer_pos: Vector2, base_amount: int) -> void:
 	_matches += 1
-	_score += amount
+	var combo := _combo_tracker.register_match(_elapsed_sec)
+	var total_amount := base_amount + ComboTracker.bonus_for(combo)
+	_score += total_amount
 	stats_changed.emit(_score, _matches)
-	match_scored.emit(_collision_pos_to_canvas(layer_pos), amount)
+	match_scored.emit(_collision_pos_to_canvas(layer_pos), total_amount, combo)
 
 
 func _collision_pos_to_canvas(layer_pos: Vector2) -> Vector2:
@@ -137,4 +142,4 @@ func _clear_tiles() -> void:
 
 func _on_board_cleared() -> void:
 	_playing = false
-	level_cleared.emit(_current_level_id, _elapsed_sec, _score, _matches)
+	level_cleared.emit(_current_level_id, _elapsed_sec, _score, _matches, _combo_tracker.max_combo)

@@ -3,6 +3,7 @@
 Godot 4.6 竖屏麻将消除游戏，设计分辨率 **720×1080**，目标平台 Android。
 
 - 详细技术说明：`docs/project-summary.md`
+- **笔试提交总结**：`docs/笔试总结.md`
 - UI / 贴图资源说明：`Assets/README.md`
 - 总体设计：`openspec/design.md`
 

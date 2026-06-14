@@ -19,6 +19,7 @@ signal board_pointer_at(canvas_pos: Vector2)
 @onready var _top_bar: MarginContainer = $TopBar
 @onready var _tools: HBoxContainer = $Tools
 @onready var _float_tip: Label = $FloatTip
+@onready var _combo_tip: Label = $ComboTip
 @onready var _score_pop_layer: Control = $ScorePopLayer
 @onready var _play_touch: Control = $PlayTouchArea
 
@@ -29,10 +30,12 @@ var _hint_remaining: int = 0
 var _float_tip_base_top: float = 0.0
 var _float_tip_height: float = 0.0
 var _float_tip_tween: Tween = null
+var _combo_tip_tween: Tween = null
 
 
 func _ready() -> void:
 	_float_tip.visible = false
+	_combo_tip.visible = false
 	_float_tip_base_top = _float_tip.offset_top
 	_float_tip_height = _float_tip.offset_bottom - _float_tip.offset_top
 	_reset_float_tip_position()
@@ -106,9 +109,40 @@ func show_block_tip(message: String) -> void:
 	)
 
 
-func show_score_pop(canvas_pos: Vector2, amount: int) -> void:
+func show_score_pop(canvas_pos: Vector2, amount: int, combo: int = 1) -> void:
 	var local_pos := _score_pop_layer.get_global_transform_with_canvas().affine_inverse() * canvas_pos
 	ScorePopEffect.spawn_on_control(_score_pop_layer, local_pos, amount)
+	if combo >= 2:
+		show_combo_hint(combo)
+
+
+func show_combo_hint(combo: int) -> void:
+	if combo < 2:
+		return
+
+	if _combo_tip_tween != null:
+		_combo_tip_tween.kill()
+
+	_combo_tip.text = "%d连击!" % combo
+	_combo_tip.visible = true
+	_combo_tip.modulate = Color(1, 1, 1, 0)
+	_combo_tip.scale = Vector2(0.72, 0.72)
+
+	_combo_tip_tween = create_tween()
+	_combo_tip_tween.set_parallel(true)
+	_combo_tip_tween.tween_property(_combo_tip, "modulate:a", 1.0, 0.16)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_combo_tip_tween.tween_property(_combo_tip, "scale", Vector2(1.08, 1.08), 0.16)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_combo_tip_tween.chain().tween_interval(0.55)
+	_combo_tip_tween.chain().set_parallel(true)
+	_combo_tip_tween.tween_property(_combo_tip, "modulate:a", 0.0, 0.34)
+	_combo_tip_tween.tween_property(_combo_tip, "scale", Vector2(1.22, 1.22), 0.34)
+	_combo_tip_tween.chain().tween_callback(func() -> void:
+		_combo_tip.visible = false
+		_combo_tip.modulate = Color.WHITE
+		_combo_tip.scale = Vector2.ONE
+	)
 
 
 func _reset_float_tip_position() -> void:

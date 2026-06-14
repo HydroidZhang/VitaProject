@@ -2,6 +2,8 @@ class_name GameplayConstants
 extends RefCounted
 
 const MATCH_SCORE := 320
+const COMBO_WINDOW_SEC := 3.0
+const COMBO_BONUS_PER_LEVEL := 60
 
 ## 道具每关可用次数（可在本文件调整）
 const EARLY_LEVEL_MAX_ID := 10

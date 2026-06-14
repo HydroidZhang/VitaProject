@@ -95,9 +95,9 @@ func _on_board_pointer_at(canvas_pos: Vector2) -> void:
 		_board.handle_pointer_at(canvas_pos)
 
 
-func _on_match_scored(canvas_pos: Vector2, amount: int) -> void:
+func _on_match_scored(canvas_pos: Vector2, amount: int, combo: int = 1) -> void:
 	if _game_hud.has_method("show_score_pop"):
-		_game_hud.show_score_pop(canvas_pos, amount)
+		_game_hud.show_score_pop(canvas_pos, amount, combo)
 
 
 func _start_level(level: LevelData) -> void:
@@ -181,6 +181,7 @@ func _on_level_cleared(
 	elapsed_sec: float,
 	score: int,
 	matches: int,
+	max_combo: int = 1,
 ) -> void:
 	var levels := LevelRegistry.load_all()
 	var max_id := levels[levels.size() - 1].id if not levels.is_empty() else level_id
@@ -192,7 +193,7 @@ func _on_level_cleared(
 
 	_game_hud.visible = false
 	_board.visible = false
-	_result_overlay.show_result(level_id, elapsed_sec, score, matches, next_level)
+	_result_overlay.show_result(level_id, elapsed_sec, score, matches, next_level, max_combo)
 	BgmManager.play_win()
 
 
